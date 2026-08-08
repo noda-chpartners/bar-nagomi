@@ -1,0 +1,333 @@
+---
+import { Image } from 'astro:assets';
+import menuBeer from '../assets/images/menu-beer-shochu.jpeg';
+import menuWhiskyGlass from '../assets/images/menu-whisky-glass.jpeg';
+import menuShochuBottle from '../assets/images/menu-shochu-bottle.jpeg';
+import menuWhiskyBottle from '../assets/images/menu-whisky-bottle.jpeg';
+import { siteContent } from '../content/siteContent';
+
+const menuImages = [
+  { src: menuBeer, alt: 'ビール・焼酎グラス・テキーラの価格表' },
+  { src: menuWhiskyGlass, alt: 'ウイスキーグラス・ソフトドリンクの価格表' },
+  { src: menuShochuBottle, alt: '焼酎ボトルの価格表' },
+  { src: menuWhiskyBottle, alt: 'ウイスキーボトル・シャンパンの価格表' },
+];
+---
+
+<section class="menu-section" id="menu" aria-labelledby="menu-title">
+  <div class="menu-section__heading section-inner" data-reveal>
+    <p class="section-kicker">{siteContent.menu.eyebrow}</p>
+    <h2 class="section-title" id="menu-title">
+      {siteContent.menu.titleLines.map((line) => <span class="title-line">{line}</span>)}
+    </h2>
+    <div class="menu-section__notes">
+      <p class="menu-section__note body-copy">{siteContent.menu.note}</p>
+      <p class="menu-section__tax-note">{siteContent.menu.taxNote}</p>
+    </div>
+  </div>
+
+  <div class="menu-section__grid section-inner">
+    {menuImages.map((item, index) => (
+      <figure class="menu-sheet" data-reveal>
+        <button
+          class="menu-sheet__button button-reset"
+          type="button"
+          aria-label={`価格表 ${index + 1} を拡大表示`}
+          data-menu-image
+          data-menu-index={index}
+        >
+          <Image
+            class="menu-sheet__image"
+            src={item.src}
+            alt={item.alt}
+            widths={[420, 640, 860]}
+            sizes="(max-width: 620px) 88vw, (max-width: 980px) 44vw, 25vw"
+            format="webp"
+          />
+          <span class="menu-sheet__zoom">VIEW</span>
+        </button>
+        <figcaption class="menu-sheet__caption">
+          <span class="menu-sheet__number">0{index + 1}</span>
+          <span class="menu-sheet__label">PRICE LIST</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+
+  <dialog class="menu-modal" data-menu-modal aria-label="価格表の拡大表示">
+    <div class="menu-modal__backdrop" data-modal-close></div>
+    <div class="menu-modal__content">
+      <button class="menu-modal__close button-reset" type="button" aria-label="拡大表示を閉じる" data-modal-close>
+        <span class="menu-modal__close-line"></span>
+        <span class="menu-modal__close-line"></span>
+      </button>
+      <div class="menu-modal__image-wrap" data-modal-image></div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  const modal = document.querySelector<HTMLDialogElement>('[data-menu-modal]');
+  const imageWrap = document.querySelector<HTMLElement>('[data-modal-image]');
+  const imageButtons = document.querySelectorAll<HTMLButtonElement>('[data-menu-image]');
+  const closeButtons = document.querySelectorAll<HTMLElement>('[data-modal-close]');
+
+  const closeModal = () => {
+    if (!modal?.open) return;
+    modal.close();
+    document.body.classList.remove('is-menu-open');
+    imageWrap?.replaceChildren();
+  };
+
+  imageButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!modal || !imageWrap) return;
+      const sourceImage = button.querySelector<HTMLImageElement>('img');
+      if (!sourceImage) return;
+      const modalImage = sourceImage.cloneNode(true) as HTMLImageElement;
+      modalImage.className = 'menu-modal__image';
+      modalImage.removeAttribute('loading');
+      imageWrap.replaceChildren(modalImage);
+      modal.showModal();
+      document.body.classList.add('is-menu-open');
+    });
+  });
+
+  closeButtons.forEach((button) => button.addEventListener('click', closeModal));
+  modal?.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    closeModal();
+  });
+</script>
+
+<style lang="scss">
+  .menu-section {
+    position: relative;
+    padding-block: var(--section-space);
+    background:
+      linear-gradient(180deg, rgba(111, 31, 34, 0.1), transparent 26%),
+      var(--color-ink);
+
+    &__heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.5fr);
+      gap: 0 clamp(48px, 8vw, 110px);
+    }
+
+    &__heading .section-kicker {
+      grid-column: 1 / -1;
+    }
+
+    &__notes {
+      align-self: end;
+      padding-bottom: 10px;
+    }
+
+    &__note {
+      margin: 0;
+    }
+
+    &__tax-note {
+      margin: 12px 0 0;
+      color: #82786d;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(18px, 2.5vw, 34px);
+      margin-top: clamp(72px, 10vw, 124px);
+    }
+  }
+
+  .menu-sheet {
+    min-width: 0;
+    margin: 0;
+
+    &:nth-child(even) {
+      margin-top: 48px;
+    }
+
+    &__button {
+      position: relative;
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      background: #090807;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.35);
+
+      &::after {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(238, 231, 220, 0.13);
+        content: '';
+        transition: border-color 260ms ease;
+      }
+
+      &:hover::after,
+      &:focus-visible::after {
+        border-color: var(--color-gold-bright);
+      }
+    }
+
+    &__image {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: saturate(0.72) brightness(0.82);
+      transition: filter 300ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &__button:hover &__image,
+    &__button:focus-visible &__image {
+      filter: saturate(0.92) brightness(0.94);
+      transform: scale(1.018);
+    }
+
+    &__zoom {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 1;
+      display: grid;
+      width: 48px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--color-gold);
+      border-radius: 50%;
+      color: var(--color-gold-bright);
+      background: rgba(13, 11, 10, 0.76);
+      font-family: var(--font-en);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+    }
+
+    &__caption {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      color: var(--color-paper-muted);
+      font-family: var(--font-en);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+    }
+
+    &__number {
+      color: var(--color-gold);
+    }
+  }
+
+  .menu-modal {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+    }
+
+    &__backdrop {
+      position: absolute;
+      inset: 0;
+    }
+
+    &__content {
+      position: relative;
+      display: grid;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      place-items: center;
+      padding: 68px 22px 24px;
+      pointer-events: none;
+    }
+
+    &__close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--color-gold);
+      border-radius: 50%;
+      pointer-events: auto;
+    }
+
+    &__close-line {
+      position: absolute;
+      top: 22px;
+      left: 12px;
+      width: 20px;
+      height: 1px;
+      background: var(--color-paper);
+
+      &:first-child { transform: rotate(45deg); }
+      &:last-child { transform: rotate(-45deg); }
+    }
+
+    &__image-wrap {
+      display: grid;
+      width: min(100%, 620px);
+      height: 100%;
+      place-items: center;
+      pointer-events: auto;
+    }
+
+    :global(.menu-modal__image) {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .menu-section {
+      &__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  }
+
+  @media (max-width: 699px) {
+    .menu-section {
+      &__heading {
+        grid-template-columns: 1fr;
+      }
+
+      &__heading .section-kicker {
+        grid-column: auto;
+      }
+
+      &__notes {
+        margin-top: 30px;
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    .menu-section {
+      &__grid {
+        grid-template-columns: 1fr;
+        gap: 52px;
+        width: min(calc(100% - 56px), 430px);
+      }
+    }
+
+    .menu-sheet:nth-child(even) {
+      margin-top: 0;
+    }
+  }
+</style>

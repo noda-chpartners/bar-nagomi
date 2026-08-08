@@ -1,0 +1,246 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../assets/images/interior-main.jpeg';
+import { siteContent } from '../content/siteContent';
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__media" data-hero-media>
+    <Image
+      class="hero__image image-cover"
+      src={heroImage}
+      alt="Barなごみのカウンターとボトルが並ぶ店内"
+      widths={[640, 960, 1280, 1600]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      format="webp"
+    />
+  </div>
+  <div class="hero__shade"></div>
+  <div class="hero__frame"></div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow eyebrow-en" data-hero-copy>{siteContent.hero.eyebrow}</p>
+    <h1 class="hero__title" id="hero-title" data-hero-copy>
+      {siteContent.hero.titleLines.map((line) => <span class="hero__title-line">{line}</span>)}
+    </h1>
+    <p class="hero__lead" data-hero-copy>{siteContent.hero.lead}</p>
+  </div>
+
+  <a class="hero__info-link link-reset" href="#information">
+    <span class="hero__info-text">INFORMATION</span>
+    <span class="hero__info-arrow" aria-hidden="true"></span>
+  </a>
+
+  <p class="hero__side-note eyebrow-en">KAMEIDO · TOKYO</p>
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-text eyebrow-en">SCROLL</span>
+    <span class="hero__scroll-line"></span>
+  </div>
+</section>
+
+<style lang="scss">
+  .hero {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+    overflow: hidden;
+    isolation: isolate;
+
+    &__media,
+    &__shade,
+    &__frame {
+      position: absolute;
+      inset: 0;
+    }
+
+    &__media {
+      z-index: -3;
+      transform: scale(1.04);
+    }
+
+    &__image {
+      object-position: center 44%;
+    }
+
+    &__shade {
+      z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(8, 7, 6, 0.88) 0%, rgba(8, 7, 6, 0.5) 53%, rgba(8, 7, 6, 0.7) 100%),
+        linear-gradient(0deg, rgba(8, 7, 6, 0.75) 0%, transparent 45%, rgba(8, 7, 6, 0.28) 100%);
+    }
+
+    &__frame {
+      z-index: 2;
+      inset: 18px;
+      border: 1px solid var(--line);
+      pointer-events: none;
+    }
+
+    &__content {
+      align-self: center;
+      width: min(72vw, 830px);
+      margin-left: clamp(54px, 9vw, 140px);
+      padding-block: 96px;
+    }
+
+    &__eyebrow {
+      margin: 0 0 clamp(22px, 3vw, 34px);
+      color: var(--color-gold-bright);
+      font-size: clamp(0.67rem, 0.9vw, 0.8rem);
+      font-weight: 500;
+    }
+
+    &__title {
+      margin: 0;
+      font-size: clamp(3.1rem, 6.3vw, 6rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+      text-shadow: 0 3px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    &__title-line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    &__lead {
+      margin: clamp(24px, 4vw, 42px) 0 0;
+      color: var(--color-paper-muted);
+      font-size: clamp(0.8rem, 1.2vw, 1rem);
+      letter-spacing: 0.18em;
+    }
+
+    &__info-link {
+      position: absolute;
+      right: clamp(40px, 5vw, 78px);
+      bottom: clamp(40px, 6vw, 72px);
+      z-index: 3;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      color: var(--color-paper);
+      font-family: var(--font-en);
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+    }
+
+    &__info-arrow {
+      width: 36px;
+      height: 1px;
+      background: var(--color-gold);
+
+      &::after {
+        display: block;
+        width: 7px;
+        height: 7px;
+        margin: -3px 0 0 auto;
+        border-top: 1px solid var(--color-gold);
+        border-right: 1px solid var(--color-gold);
+        content: '';
+        transform: rotate(45deg);
+      }
+    }
+
+    &__side-note {
+      position: absolute;
+      top: 50%;
+      left: 29px;
+      margin: 0;
+      color: var(--color-paper-muted);
+      font-size: 0.58rem;
+      writing-mode: vertical-rl;
+      transform: translateY(-50%);
+    }
+
+    &__scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      transform: translateX(-50%);
+    }
+
+    &__scroll-text {
+      color: var(--color-paper-muted);
+      font-size: 0.52rem;
+    }
+
+    &__scroll-line {
+      width: 1px;
+      height: 25px;
+      overflow: hidden;
+      background: rgba(238, 231, 220, 0.25);
+
+      &::after {
+        display: block;
+        width: 1px;
+        height: 11px;
+        background: var(--color-gold-bright);
+        content: '';
+        animation: scrollLine 1.8s ease-in-out infinite;
+      }
+    }
+  }
+
+  @keyframes scrollLine {
+    0% { transform: translateY(-12px); }
+    100% { transform: translateY(27px); }
+  }
+
+  @media (max-width: 899px) {
+    .hero {
+      &__content {
+        width: calc(100% - 48px);
+        padding-bottom: 150px;
+      }
+
+      &__info-link {
+        right: 28px;
+        bottom: 38px;
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero {
+      &__image {
+        object-position: 58% center;
+      }
+
+      &__content {
+        align-self: end;
+        width: calc(100% - 48px);
+        margin-inline: 24px;
+        padding: 118px 0 25vh;
+      }
+
+      &__title {
+        font-size: clamp(2.05rem, 10vw, 3.2rem);
+        line-height: 1.5;
+      }
+
+      &__lead {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+      }
+
+      &__side-note,
+      &__scroll {
+        display: none;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll-line::after {
+      animation: none;
+    }
+  }
+</style>

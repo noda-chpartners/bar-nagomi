@@ -1,0 +1,130 @@
+---
+import { Image } from 'astro:assets';
+import exteriorImage from '../assets/images/exterior-front.jpeg';
+import { siteContent } from '../content/siteContent';
+---
+
+<section class="concept" id="concept" aria-labelledby="concept-title">
+  <div class="concept__inner section-inner">
+    <div class="concept__copy" data-reveal>
+      <p class="section-kicker">{siteContent.concept.eyebrow}</p>
+      <h2 class="section-title" id="concept-title">
+        {siteContent.concept.titleLines.map((line) => <span class="title-line">{line}</span>)}
+      </h2>
+      <p class="concept__text body-copy">
+        {siteContent.concept.textLines.map((line) => <span class="copy-line">{line}</span>)}
+      </p>
+    </div>
+
+    <figure class="concept__figure" data-reveal>
+      <div class="concept__image-wrap">
+        <Image
+          class="concept__image image-cover"
+          src={exteriorImage}
+          alt="赤い庇と木の扉が目印のBarなごみ外観"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 767px) 86vw, 42vw"
+          format="webp"
+        />
+      </div>
+      <figcaption class="concept__caption eyebrow-en">KAMEIDO · BAR NAGOMI</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style lang="scss">
+  .concept {
+    position: relative;
+    padding-block: var(--section-space);
+    background:
+      radial-gradient(circle at 12% 20%, rgba(111, 31, 34, 0.16), transparent 32%),
+      var(--color-ink);
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: var(--side-space);
+      width: 1px;
+      height: 92px;
+      background: var(--line);
+      content: '';
+    }
+
+    &__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.78fr);
+      gap: clamp(70px, 10vw, 150px);
+      align-items: center;
+    }
+
+    &__copy {
+      padding-left: clamp(0px, 3vw, 42px);
+    }
+
+    &__text {
+      margin-top: clamp(30px, 5vw, 56px);
+    }
+
+    &__figure {
+      position: relative;
+      margin: 0;
+    }
+
+    &__image-wrap {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+
+      &::after {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(238, 231, 220, 0.12);
+        content: '';
+      }
+    }
+
+    &__image {
+      filter: saturate(0.78) contrast(1.05);
+    }
+
+    &__caption {
+      position: absolute;
+      right: -20px;
+      bottom: 32px;
+      margin: 0;
+      color: var(--color-gold-bright);
+      font-size: 0.66rem;
+      writing-mode: vertical-rl;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .concept {
+      &__inner {
+        grid-template-columns: 1fr;
+        gap: 68px;
+      }
+
+      &__copy {
+        padding-left: 0;
+      }
+
+      &__figure {
+        width: min(84%, 520px);
+        margin-left: auto;
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    .concept {
+      &__figure {
+        width: 88%;
+      }
+
+      &__caption {
+        right: -15px;
+      }
+    }
+  }
+</style>

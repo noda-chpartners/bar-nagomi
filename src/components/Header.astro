@@ -1,0 +1,331 @@
+---
+import { siteContent } from '../content/siteContent';
+---
+
+<header class="site-header" data-header>
+  <a class="site-header__brand link-reset" href="#top" aria-label="Barなごみ ホーム">
+    <span class="site-header__brand-bar">Bar</span>
+    <span class="site-header__brand-name">なごみ</span>
+  </a>
+
+  <nav class="desktop-nav" aria-label="メインナビゲーション">
+    {siteContent.navigation.map((item) => (
+      <a class="desktop-nav__link link-reset" href={item.href}>
+        <span class="desktop-nav__number">{item.number}</span>
+        <span class="desktop-nav__label">{item.label}</span>
+      </a>
+    ))}
+  </nav>
+
+  <button
+    class="menu-button button-reset"
+    type="button"
+    aria-label="メニューを開く"
+    aria-controls="mobile-menu"
+    aria-expanded="false"
+    data-menu-button
+  >
+    <span class="menu-button__line"></span>
+    <span class="menu-button__line"></span>
+  </button>
+
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-mobile-menu>
+    <div class="mobile-menu__inner">
+      <p class="mobile-menu__eyebrow">BAR NAGOMI · KAMEIDO</p>
+      <nav class="mobile-menu__nav" aria-label="モバイルナビゲーション">
+        {siteContent.navigation.map((item) => (
+          <a class="mobile-menu__link link-reset" href={item.href}>
+            <span class="mobile-menu__number">{item.number}</span>
+            <span class="mobile-menu__label">{item.label}</span>
+          </a>
+        ))}
+      </nav>
+      <a class="mobile-menu__phone link-reset" href={`tel:${siteContent.store.phoneHref}`}>
+        <span class="mobile-menu__phone-label">TELEPHONE</span>
+        <span class="mobile-menu__phone-number">{siteContent.store.phone}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const menuButton = document.querySelector<HTMLButtonElement>('[data-menu-button]');
+  const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+  const mobileLinks = document.querySelectorAll<HTMLAnchorElement>('.mobile-menu__link');
+
+  const setMenuState = (isOpen: boolean) => {
+    if (!header || !menuButton || !mobileMenu) return;
+    header.classList.toggle('is-menu-open', isOpen);
+    document.body.classList.toggle('is-menu-open', isOpen);
+    menuButton.setAttribute('aria-expanded', String(isOpen));
+    menuButton.setAttribute('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+    mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+  };
+
+  menuButton?.addEventListener('click', () => {
+    setMenuState(menuButton.getAttribute('aria-expanded') !== 'true');
+  });
+
+  mobileLinks.forEach((link) => link.addEventListener('click', () => setMenuState(false)));
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenuState(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 900) setMenuState(false);
+  });
+</script>
+
+<style lang="scss">
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: clamp(20px, 3vw, 38px) var(--side-space);
+    pointer-events: none;
+
+    &__brand {
+      position: relative;
+      z-index: 52;
+      display: grid;
+      color: var(--color-paper);
+      line-height: 1;
+      pointer-events: auto;
+    }
+
+    &__brand-bar {
+      margin-bottom: 5px;
+      font-family: var(--font-en);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+    }
+
+    &__brand-name {
+      font-size: clamp(1.15rem, 2vw, 1.55rem);
+      letter-spacing: 0.18em;
+      writing-mode: vertical-rl;
+    }
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(24px, 3.3vw, 52px);
+    pointer-events: auto;
+
+    &__link {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      color: var(--color-paper-muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      transition: color 240ms ease;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--color-gold-bright);
+      }
+    }
+
+    &__number {
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 0.74rem;
+    }
+  }
+
+  .menu-button {
+    position: relative;
+    z-index: 52;
+    display: none;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    pointer-events: auto;
+
+    &__line {
+      position: absolute;
+      left: 13px;
+      width: 20px;
+      height: 1px;
+      background: var(--color-paper);
+      transition: transform 280ms ease, top 280ms ease;
+
+      &:first-child {
+        top: 19px;
+      }
+
+      &:last-child {
+        top: 27px;
+      }
+    }
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 51;
+    width: 100%;
+    min-width: 0;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    visibility: hidden;
+    background: #110d0c;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 280ms ease, transform 280ms ease, visibility 280ms;
+    pointer-events: none;
+
+    &::before,
+    &::after {
+      position: absolute;
+      content: '';
+      pointer-events: none;
+    }
+
+    &::before {
+      inset: 18px;
+      border: 1px solid var(--line);
+    }
+
+    &::after {
+      right: 18px;
+      bottom: 18px;
+      width: clamp(140px, 42vw, 220px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(189, 163, 110, 0.2);
+      border-radius: 50%;
+      box-shadow: 0 0 0 36px rgba(189, 163, 110, 0.025);
+    }
+
+    &__inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: min(100% - 64px, 520px);
+      height: 100%;
+      margin-inline: auto;
+      padding-block: clamp(78px, 12vh, 112px) clamp(44px, 7vh, 72px);
+    }
+
+    &__eyebrow {
+      margin: 0 0 clamp(22px, 5vh, 42px);
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+    }
+
+    &__nav {
+      display: grid;
+    }
+
+    &__link {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      align-items: center;
+      min-width: 0;
+      padding-block: clamp(9px, 1.8vh, 17px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    &__number {
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 0.75rem;
+    }
+
+    &__label {
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+    }
+
+    &__phone {
+      display: grid;
+      gap: 2px;
+      align-self: flex-start;
+      margin-top: clamp(22px, 5vh, 42px);
+    }
+
+    &__phone-label {
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 0.64rem;
+      letter-spacing: 0.22em;
+    }
+
+    &__phone-number {
+      font-family: var(--font-en);
+      font-size: clamp(1.25rem, 5vw, 1.65rem);
+      letter-spacing: 0.08em;
+    }
+  }
+
+  .is-menu-open {
+    .mobile-menu {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .menu-button__line:first-child {
+      top: 23px;
+      transform: rotate(45deg);
+    }
+
+    .menu-button__line:last-child {
+      top: 23px;
+      transform: rotate(-45deg);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .desktop-nav {
+      display: none;
+    }
+
+    .menu-button {
+      display: block;
+    }
+  }
+
+  @media (max-height: 620px) and (max-width: 899px) {
+    .is-menu-open .site-header__brand {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .mobile-menu__inner {
+      justify-content: flex-start;
+      padding-top: 104px;
+      padding-bottom: 30px;
+    }
+
+    .mobile-menu__eyebrow {
+      display: none;
+    }
+
+    .mobile-menu__link {
+      padding-block: 7px;
+    }
+
+    .mobile-menu__phone {
+      margin-top: 14px;
+    }
+  }
+</style>

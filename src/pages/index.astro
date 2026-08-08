@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Concept from '../components/Concept.astro';
+import SpaceGallery from '../components/SpaceGallery.astro';
+import MenuSection from '../components/MenuSection.astro';
+import Information from '../components/Information.astro';
+import Footer from '../components/Footer.astro';
+import MotionScripts from '../components/MotionScripts.astro';
+
+const pageTitle = 'Barなごみ｜亀戸駅徒歩5分のバー';
+const pageDescription =
+  '東京都江東区亀戸6-3-1、亀戸駅から徒歩5分のBarなごみ。営業時間22:00〜、日曜定休、15席。';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="site-shell">
+    <Header />
+    <main class="site-main">
+      <Hero />
+      <Concept />
+      <SpaceGallery />
+      <MenuSection />
+      <Information />
+    </main>
+    <Footer />
+  </div>
+  <MotionScripts />
+</BaseLayout>

@@ -1,0 +1,242 @@
+---
+import { Image } from 'astro:assets';
+import counterWide from '../assets/images/counter-wide.jpeg';
+import bottlesImage from '../assets/images/bottles.jpeg';
+import karaokeImage from '../assets/images/karaoke.jpeg';
+import { siteContent } from '../content/siteContent';
+---
+
+<section class="space" id="space" aria-labelledby="space-title">
+  <div class="space__heading section-inner" data-reveal>
+    <p class="section-kicker">{siteContent.space.eyebrow}</p>
+    <h2 class="section-title" id="space-title">
+      {siteContent.space.titleLines.map((line) => <span class="title-line">{line}</span>)}
+    </h2>
+    <p class="space__intro body-copy">
+      {siteContent.space.textLines.map((line) => <span class="copy-line">{line}</span>)}
+    </p>
+  </div>
+
+  <div class="space__gallery section-inner">
+    <figure class="space-card space-card--wide" data-reveal>
+      <div class="space-card__image-wrap space-card__image-wrap--wide">
+        <Image
+          class="space-card__image image-cover"
+          src={counterWide}
+          alt="Barなごみの長いカウンター席"
+          widths={[720, 1080, 1440]}
+          sizes="(max-width: 767px) 92vw, 70vw"
+          format="webp"
+        />
+      </div>
+      <figcaption class="space-card__caption">
+        <span class="space-card__number">01</span>
+        <span class="space-card__label">COUNTER</span>
+      </figcaption>
+    </figure>
+
+    <figure class="space-card space-card--small" data-reveal>
+      <div class="space-card__image-wrap space-card__image-wrap--portrait">
+        <Image
+          class="space-card__image image-cover"
+          src={bottlesImage}
+          alt="Barなごみのカウンターに並ぶボトル"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 767px) 78vw, 34vw"
+          format="webp"
+        />
+      </div>
+      <figcaption class="space-card__caption">
+        <span class="space-card__number">02</span>
+        <span class="space-card__label">BAR SHELF</span>
+      </figcaption>
+    </figure>
+
+    <figure class="space-card space-card--small space-card--offset" data-reveal>
+      <div class="space-card__image-wrap space-card__image-wrap--portrait">
+        <Image
+          class="space-card__image image-cover"
+          src={karaokeImage}
+          alt="Barなごみ店内のモニターとマイク"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 767px) 78vw, 34vw"
+          format="webp"
+        />
+      </div>
+      <figcaption class="space-card__caption">
+        <span class="space-card__number">03</span>
+        <span class="space-card__label">NIGHT SCENE</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="space__marquee" aria-hidden="true">
+    <span class="space__marquee-text eyebrow-en">BAR NAGOMI · KAMEIDO · OPEN 22:00 · BAR NAGOMI · KAMEIDO · OPEN 22:00 ·</span>
+  </div>
+</section>
+
+<style lang="scss">
+  .space {
+    position: relative;
+    padding-block: var(--section-space) 90px;
+    background: var(--color-ink-soft);
+
+    &__heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.65fr);
+      column-gap: clamp(50px, 9vw, 130px);
+    }
+
+    &__heading .section-kicker {
+      grid-column: 1 / -1;
+    }
+
+    &__intro {
+      align-self: end;
+      padding-bottom: 12px;
+    }
+
+    &__gallery {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.55fr);
+      gap: clamp(42px, 8vw, 112px);
+      margin-top: clamp(76px, 11vw, 140px);
+    }
+
+    &__marquee {
+      width: 100%;
+      margin-top: clamp(100px, 14vw, 170px);
+      padding-block: 18px;
+      overflow: hidden;
+      border-block: 1px solid var(--line);
+    }
+
+    &__marquee-text {
+      display: block;
+      width: max-content;
+      color: var(--color-gold);
+      font-size: clamp(0.78rem, 1.4vw, 1rem);
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+    }
+  }
+
+  .space-card {
+    margin: 0;
+
+    &--wide {
+      grid-row: span 2;
+    }
+
+    &--offset {
+      margin-top: 48px;
+      margin-left: -14%;
+    }
+
+    &__image-wrap {
+      position: relative;
+      overflow: hidden;
+      background: var(--color-ink);
+
+      &::after {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(238, 231, 220, 0.1);
+        content: '';
+      }
+
+      &--wide {
+        aspect-ratio: 4 / 5;
+      }
+
+      &--portrait {
+        aspect-ratio: 4 / 5;
+      }
+    }
+
+    &__image {
+      filter: saturate(0.72) contrast(1.04);
+      transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1), filter 600ms ease;
+    }
+
+    &:hover .space-card__image {
+      filter: saturate(0.95) contrast(1.04);
+      transform: scale(1.025);
+    }
+
+    &__caption {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      color: var(--color-paper-muted);
+      font-family: var(--font-en);
+      font-size: 0.67rem;
+      letter-spacing: 0.18em;
+    }
+
+    &__number {
+      color: var(--color-gold);
+    }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 899px) {
+    .space {
+      &__heading {
+        grid-template-columns: 1fr;
+      }
+
+      &__heading .section-kicker {
+        grid-column: auto;
+      }
+
+      &__intro {
+        margin-top: 34px;
+      }
+
+      &__gallery {
+        grid-template-columns: 1fr 0.72fr;
+        gap: 48px 28px;
+      }
+
+      &__marquee-text {
+        animation-duration: 20s;
+      }
+    }
+  }
+
+  @media (max-width: 620px) {
+    .space {
+      &__gallery {
+        display: block;
+      }
+    }
+
+    .space-card {
+      &--wide {
+        width: 92%;
+      }
+
+      &--small {
+        width: 74%;
+        margin-top: 56px;
+        margin-left: auto;
+      }
+
+      &--offset {
+        margin-right: auto;
+        margin-left: 0;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .space__marquee-text {
+      animation: none;
+    }
+  }
+</style>

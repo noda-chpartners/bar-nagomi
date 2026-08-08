@@ -1,0 +1,137 @@
+---
+import { siteContent } from '../content/siteContent';
+---
+
+<footer class="footer">
+  <div class="footer__inner section-inner">
+    <a class="footer__brand link-reset" href="#top" aria-label="ページ上部へ戻る">
+      <span class="footer__brand-bar">Bar</span>
+      <span class="footer__brand-name">なごみ</span>
+    </a>
+
+    <div class="footer__details">
+      <p class="footer__address">{siteContent.store.address}</p>
+      <a class="footer__phone link-reset" href={`tel:${siteContent.store.phoneHref}`}>
+        {siteContent.store.phone}
+      </a>
+    </div>
+
+    <a class="footer__top link-reset" href="#top">
+      <span class="footer__top-text">BACK TO TOP</span>
+      <span class="footer__top-line"></span>
+    </a>
+  </div>
+  <div class="footer__bottom section-inner">
+    <p class="footer__copyright">© BAR NAGOMI</p>
+    <p class="footer__location">KAMEIDO · TOKYO</p>
+  </div>
+</footer>
+
+<style lang="scss">
+  .footer {
+    padding-block: clamp(76px, 10vw, 124px) 30px;
+    background: #090807;
+
+    &__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 48px;
+      align-items: center;
+      padding-bottom: 62px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    &__brand {
+      display: flex;
+      gap: 14px;
+      align-items: baseline;
+      justify-self: start;
+    }
+
+    &__brand-bar {
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 1rem;
+    }
+
+    &__brand-name {
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      letter-spacing: 0.12em;
+    }
+
+    &__details {
+      display: grid;
+      gap: 6px;
+    }
+
+    &__address,
+    &__phone {
+      margin: 0;
+      color: var(--color-paper-muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.07em;
+    }
+
+    &__phone {
+      font-family: var(--font-en);
+      font-size: 1rem;
+    }
+
+    &__top {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+
+    &__top-text {
+      color: var(--color-gold);
+      font-family: var(--font-en);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      writing-mode: vertical-rl;
+    }
+
+    &__top-line {
+      width: 1px;
+      height: 50px;
+      background: var(--color-gold);
+    }
+
+    &__bottom {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 22px;
+    }
+
+    &__copyright,
+    &__location {
+      margin: 0;
+      color: #736a61;
+      font-family: var(--font-en);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .footer {
+      &__inner {
+        grid-template-columns: 1fr auto;
+      }
+
+      &__details {
+        grid-column: 1;
+      }
+
+      &__top {
+        grid-row: 1 / span 2;
+        grid-column: 2;
+      }
+
+      &__bottom {
+        display: grid;
+        gap: 5px;
+      }
+    }
+  }
+</style>
